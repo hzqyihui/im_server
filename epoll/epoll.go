@@ -1,7 +1,7 @@
 //go:build linux
 // +build linux
 
-package epoll
+package epoll_server
 
 import (
 	"fmt"
@@ -201,7 +201,7 @@ func (s *ServerConn) Close() {
 	}
 }
 
-func init() {
+func StartEpoll() {
 	epollM := NewEpollM()
 	//开启监听
 	err := epollM.Listen("0.0.0.0", 2700)
