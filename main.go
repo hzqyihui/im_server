@@ -1,6 +1,8 @@
 package main
 
 import (
+	"IM_Server/cache"
+	epoll_server "IM_Server/epoll"
 	grpc_base "IM_Server/grpc"
 	"IM_Server/model"
 	"github.com/joho/godotenv"
@@ -12,6 +14,9 @@ func main() {
 	model.Init()
 	grpc_base.StartRpc()
 
+	//开启redis
+	cache.Redis()
+
 	//epoll
-	//epoll_server.StartEpoll()
+	epoll_server.StartEpoll()
 }

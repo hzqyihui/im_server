@@ -4,9 +4,12 @@
 package epoll_server
 
 import (
+	"IM_Server/model"
+	"encoding/json"
 	"fmt"
 	"net"
 	"syscall"
+	"time"
 )
 
 func NewEpollM() *EpollM {
@@ -165,12 +168,22 @@ func (e *EpollM) EpollRemoveEvent(fd int) error {
 }
 
 type ServerConn struct {
-	fd int
+	fd       int
+	userInfo model.User //im用户id    校验通过，是正常用户
+}
+
+type IMMessage struct {
+	ProjectId  int
+	ProjectUid int
+	// Uid int  //为0是服务器发送的
+	Time int    //时间戳
+	Data string //数据
+	Type int    //1普通消息2回执消息,表示已经收到 3心跳
 }
 
 //读取数据
 func (s *ServerConn) Read() {
-	data := make([]byte, 100)
+	data := make([]byte, 1000)
 
 	//通过系统调用,读取数据,n是读到的长度
 	n, err := syscall.Read(s.fd, data)
@@ -180,8 +193,34 @@ func (s *ServerConn) Read() {
 	if err != nil {
 		fmt.Printf("fd %d read error:%s\n", s.fd, err.Error())
 	} else {
+		//读取消息
 		fmt.Printf("%d say: %s \n", s.fd, data[:n])
-		s.Write([]byte(fmt.Sprintf("hello %d", s.fd)))
+		requestMessage := IMMessage{}
+		err := json.Unmarshal(data[:n], &requestMessage)
+		if err != nil {
+			fmt.Printf("fd %d json uncode error:%s\n", s.fd, err.Error())
+		}
+
+		//上线操作
+		if s.userInfo == (model.User{}) {
+			userInfo := UserIMOnline(requestMessage)
+			s.userInfo = userInfo
+		}
+
+		//读取消息
+		if requestMessage.Type == 1 {
+
+		}
+
+		//回执消息
+		responseStruct := IMMessage{
+			ProjectUid: 0,
+			Time:       int(time.Now().Unix()),
+			Type:       2,
+		}
+		responseJson, _ := json.Marshal(responseStruct)
+		s.Write([]byte(responseJson))
+		fmt.Println("服务器回执消息：", responseStruct)
 	}
 }
 

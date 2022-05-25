@@ -55,13 +55,9 @@ func UserGroupEdit(r *proto_service.UserGroup) error {
 				Uid:     int(v),
 				GroupId: int(r.GroupId),
 			})
-			insertModel := model.UserGroup{
-				Uid:     int(v),
-				GroupId: int(r.GroupId),
-			}
-			if err := tx.Create(&insertModel).Error; err != nil {
-				return errors.New("UserGroupEdit")
-			}
+		}
+		if err := tx.Create(&addUserGroup).Error; err != nil {
+			return errors.New("UserGroupEdit")
 		}
 	}
 	tx.Commit()
