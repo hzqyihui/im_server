@@ -34,6 +34,17 @@ func (e *EpollM) Close() {
 	}
 }
 
+//获取符合条件的用户
+func (e *EpollM) GetUserConn(projectId int, projectUid int) *ServerConn {
+	for _, v := range e.conn {
+		if v.userInfo.ProjectId == projectId && v.userInfo.ProjectUid == projectUid {
+			return v
+		}
+	}
+	return nil
+
+}
+
 //获取一个链接
 func (e *EpollM) GetConn(fd int) *ServerConn {
 	return e.conn[fd]
@@ -90,7 +101,8 @@ func (e *EpollM) Accept() error {
 			return nil
 		}
 		e.AddConn(&ServerConn{
-			fd: nfd,
+			fd:     nfd,
+			epollM: e,
 		})
 
 	}
@@ -168,6 +180,7 @@ func (e *EpollM) EpollRemoveEvent(fd int) error {
 }
 
 type ServerConn struct {
+	epollM   *EpollM
 	fd       int
 	userInfo model.User //im用户id    校验通过，是正常用户
 }
@@ -176,9 +189,12 @@ type IMMessage struct {
 	ProjectId  int
 	ProjectUid int
 	// Uid int  //为0是服务器发送的
-	Time int    //时间戳
-	Data string //数据
-	Type int    //1普通消息2回执消息,表示已经收到 3心跳
+	Time         int    //时间戳
+	Data         string //数据
+	Type         int    //1普通消息2回执消息,表示已经收到 3心跳[ProjectId  ProjectUid]
+	ToProjectId  int
+	ToProjectUid int
+	GroupId      int
 }
 
 //读取数据
@@ -209,6 +225,16 @@ func (s *ServerConn) Read() {
 
 		//读取消息
 		if requestMessage.Type == 1 {
+
+			//发送消息socket
+			isSend := false
+			ToConn := s.epollM.GetUserConn(requestMessage.ProjectId, requestMessage.ProjectUid)
+			if ToConn != nil {
+				ToConn.Write([]byte(requestMessage.Data))
+				isSend = true
+			}
+			//存下消息
+			UserIMSaveMessage(requestMessage, isSend)
 
 		}
 
