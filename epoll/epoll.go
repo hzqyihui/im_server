@@ -223,6 +223,16 @@ func (s *ServerConn) Read() {
 		if s.userInfo == (model.User{}) {
 			userInfo := UserIMOnline(requestMessage)
 			s.userInfo = userInfo
+
+			responseStruct := IMMessage{
+				ProjectUid: 0,
+				Time:       int(time.Now().Unix()),
+				Type:       2,
+				Data:       "上线成功",
+			}
+			responseJson, _ := json.Marshal(responseStruct)
+			s.Write([]byte(responseJson))
+			fmt.Println("服务器上线成功：", responseStruct)
 		}
 
 		//读取消息

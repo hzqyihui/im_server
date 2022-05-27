@@ -23,6 +23,7 @@ func UserIMOnline(request IMMessage) model.User {
 	if err := tx.Save(&userInfo).Error; err != nil {
 		fmt.Println("上线更新失败")
 	}
+	tx.Commit()
 
 	return userInfo
 }
