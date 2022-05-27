@@ -6,6 +6,7 @@ package epoll_server
 import (
 	"IM_Server/model"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"os"
@@ -121,6 +122,7 @@ func (e *EpollM) CloseConn(fd int) error {
 	}
 	conn.Close()
 	e.DelConn(fd)
+	println("关闭客户端连接：", fd)
 	return nil
 }
 
@@ -140,11 +142,11 @@ func (e *EpollM) HandlerEpoll() error {
 	events := make([]syscall.EpollEvent, 100)
 	//在死循环中处理epoll
 	for {
-		fmt.Println("epoll——run")
+		//fmt.Println("epoll——run")
 		//msec -1,会一直阻塞,直到有事件可以处理才会返回, n 事件个数
 		//这里epoll 不支持接受accept 事件，有连接来时 还是一直阻塞的
 		n, err := syscall.EpollWait(e.epollFd, events, -1)
-		fmt.Println("epoll_event——run")
+		fmt.Println("epoll_event——run:", n)
 		if err != nil {
 			return err
 		}
@@ -187,6 +189,9 @@ type ServerConn struct {
 	userInfo model.User //im用户id    校验通过，是正常用户
 }
 
+//3 心跳  ProjectId  ProjectUid
+//2 回执消息  （tudo 后期加个uuid来标识唯一消息）
+//1 消息
 type IMMessage struct {
 	ProjectId  int
 	ProjectUid int
@@ -199,67 +204,88 @@ type IMMessage struct {
 	GroupId      int
 }
 
+func (s *ServerConn) PreHandleMessage(data []byte) (IMMessage, error) {
+	request := IMMessage{}
+
+	jsonDecodeErr := json.Unmarshal(data, &request)
+	if len(data) == 0 || jsonDecodeErr != nil {
+		fmt.Println("不合法的消息，不做处理")
+		return request, errors.New("解析失败")
+	}
+
+	//必须
+	if request.ProjectUid < 0 || request.ProjectId < 0 {
+		return request, errors.New("缺少必要身份信息参数")
+	}
+
+	//补充时间
+	request.Time = int(time.Now().Unix())
+
+	return request, nil
+}
+
 //读取数据
 func (s *ServerConn) Read() {
-	data := make([]byte, 1000)
-
+	data := make([]byte, 10000)
 	//通过系统调用,读取数据,n是读到的长度
 	n, err := syscall.Read(s.fd, data)
-	if n == 0 {
+	if n == 0 || err != nil {
+		//如果n=0，那这个链接就是客户端异常关闭了
+		s.epollM.CloseConn(s.fd)
 		return
 	}
-	if err != nil {
-		fmt.Printf("fd %d read error:%s\n", s.fd, err.Error())
-	} else {
-		//读取消息
-		fmt.Printf("%d say: %s \n", s.fd, data[:n])
-		requestMessage := IMMessage{}
-		err := json.Unmarshal(data[:n], &requestMessage)
-		if err != nil {
-			fmt.Printf("fd %d json uncode error:%s\n", s.fd, err.Error())
-		}
 
-		//上线操作
-		if s.userInfo == (model.User{}) {
-			userInfo := UserIMOnline(requestMessage)
-			s.userInfo = userInfo
+	//读取消息
+	fmt.Printf("%d say: %s \n", s.fd, data)
 
-			responseStruct := IMMessage{
-				ProjectUid: 0,
-				Time:       int(time.Now().Unix()),
-				Type:       2,
-				Data:       "上线成功",
-			}
-			responseJson, _ := json.Marshal(responseStruct)
-			s.Write([]byte(responseJson))
-			fmt.Println("服务器上线成功：", responseStruct)
-		}
-
-		//读取消息
-		if requestMessage.Type == 1 {
-
-			//发送消息socket
-			isSend := false
-			ToConn := s.epollM.GetUserConn(requestMessage.ProjectId, requestMessage.ProjectUid)
-			if ToConn != nil {
-				ToConn.Write([]byte(requestMessage.Data))
-				isSend = true
-			}
-			//存下消息
-			UserIMSaveMessage(requestMessage, isSend)
-
-		}
-
-		//回执消息
-		responseStruct := IMMessage{
-			ProjectUid: 0,
-			Time:       int(time.Now().Unix()),
-			Type:       2,
-		}
-		responseJson, _ := json.Marshal(responseStruct)
-		s.Write([]byte(responseJson))
-		fmt.Println("服务器回执消息：", responseStruct)
+	//预处理数据 必须符合requestMessage 格式
+	requestMessage, requestMessageErr := s.PreHandleMessage(data)
+	if requestMessageErr != nil {
+		fmt.Println("预处理数据出错：", requestMessageErr.Error())
+		return
 	}
+
+	//上线操作
+	if s.userInfo == (model.User{}) {
+		userInfo := UserIMOnline(requestMessage)
+		s.userInfo = userInfo
+
+		//responseStruct := IMMessage{
+		//    ProjectUid: 0,
+		//    Time:       int(time.Now().Unix()),
+		//    Type:       2,
+		//    Data:       "上线成功",
+		//}
+		//responseJson, _ := json.Marshal(responseStruct)
+		//s.Write([]byte(responseJson))
+		fmt.Println("服务器上线成功：", s)
+	}
+
+	//读取消息
+	if s.userInfo != (model.User{}) && requestMessage.Type == 1 {
+
+		//发送消息socket
+		isSend := false
+		ToConn := s.epollM.GetUserConn(requestMessage.ProjectId, requestMessage.ProjectUid)
+		if ToConn != nil {
+			ToConn.Write([]byte(requestMessage.Data))
+			isSend = true
+		}
+		//存下消息
+		UserIMSaveMessage(requestMessage, isSend)
+
+	}
+
+	//回执消息
+	responseStruct := IMMessage{
+		ProjectUid: 0,
+		Time:       int(time.Now().Unix()),
+		Type:       2,
+	}
+	responseJson, _ := json.Marshal(responseStruct)
+	s.Write([]byte(responseJson))
+	fmt.Println("服务器回执消息：", responseStruct)
+
 }
 
 //向这个链接中写数据

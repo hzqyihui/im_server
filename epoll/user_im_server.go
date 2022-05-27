@@ -44,6 +44,7 @@ func UserIMSaveMessage(request IMMessage, isSend bool) error {
 		IsSend:      Util.BoolToInt(isSend),
 	}
 
+	fmt.Println("插入消息数据：", messageModel)
 	if err := tx.Create(&messageModel).Error; err != nil {
 		return errors.New("UserIMSaveMessageError")
 	}
