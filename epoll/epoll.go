@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"os"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -267,9 +269,12 @@ func (s *ServerConn) Close() {
 }
 
 func StartEpoll() {
+	fmt.Println("epoll 服务启动")
 	epollM := NewEpollM()
+	epollIp := os.Getenv("EPOLL_Ip")
+	epollPort, _ := strconv.Atoi(os.Getenv("EPOLL_PORT"))
 	//开启监听
-	err := epollM.Listen("0.0.0.0", 2700)
+	err := epollM.Listen(epollIp, epollPort)
 	if err != nil {
 		panic(err)
 	}

@@ -12,11 +12,14 @@ func main() {
 	// 从本地读取环境变量
 	godotenv.Load()
 	model.Init()
-	grpc_base.StartRpc()
-
 	//开启redis
 	cache.Redis()
 
+	//grpc
+	go grpc_base.StartRpc()
+
 	//epoll
-	epoll_server.StartEpoll()
+	go epoll_server.StartEpoll()
+
+	select {}
 }
