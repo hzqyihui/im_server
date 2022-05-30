@@ -70,6 +70,8 @@ func (e *EpollM) Listen(ipAddr string, port int) error {
 	if err != nil {
 		return err
 	}
+	//设置端口重复使用
+	syscall.SetsockoptInt(fd, syscall.SOL_SOCKET, syscall.SO_REUSEADDR, 1)
 
 	//ip地址转换
 	var addr [4]byte
@@ -123,6 +125,15 @@ func (e *EpollM) CloseConn(fd int) error {
 	conn.Close()
 	e.DelConn(fd)
 	println("关闭客户端连接：", fd)
+
+	//修改在线状态
+	if conn.userInfo.ID > 0 {
+		dbUser := conn.userInfo
+		dbUser.IsOnline = 0
+		if err := model.DB.Save(dbUser).Error; err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -198,7 +209,7 @@ type IMMessage struct {
 	// Uid int  //为0是服务器发送的
 	Time         int    //时间戳
 	Data         string //数据
-	Type         int    //1普通消息2回执消息,表示已经收到 3心跳[ProjectId  ProjectUid]
+	Type         int    //1普通消息2回执消息,表示已经收到 3心跳[ProjectId  ProjectUid]4.错误提示
 	ToProjectId  int
 	ToProjectUid int
 	GroupId      int
@@ -209,8 +220,7 @@ func (s *ServerConn) PreHandleMessage(data []byte) (IMMessage, error) {
 
 	jsonDecodeErr := json.Unmarshal(data, &request)
 	if len(data) == 0 || jsonDecodeErr != nil {
-		fmt.Println("不合法的消息，不做处理")
-		return request, errors.New("解析失败")
+		return request, errors.New("解析失败:" + jsonDecodeErr.Error())
 	}
 
 	//必须
@@ -239,7 +249,8 @@ func (s *ServerConn) Read() {
 	fmt.Printf("%d say: %s \n", s.fd, data)
 
 	//预处理数据 必须符合requestMessage 格式
-	requestMessage, requestMessageErr := s.PreHandleMessage(data)
+	//data[:] 注意这个地方要这么写，不然解析不出来,末尾会多个结束符
+	requestMessage, requestMessageErr := s.PreHandleMessage(data[:n])
 	if requestMessageErr != nil {
 		fmt.Println("预处理数据出错：", requestMessageErr.Error())
 		return
@@ -250,15 +261,13 @@ func (s *ServerConn) Read() {
 		userInfo := UserIMOnline(requestMessage)
 		s.userInfo = userInfo
 
-		//responseStruct := IMMessage{
-		//    ProjectUid: 0,
-		//    Time:       int(time.Now().Unix()),
-		//    Type:       2,
-		//    Data:       "上线成功",
-		//}
-		//responseJson, _ := json.Marshal(responseStruct)
-		//s.Write([]byte(responseJson))
-		fmt.Println("服务器上线成功：", s)
+		fmt.Println(s.userInfo.Name, " 上线成功!")
+		//上线成功后发送离线消息
+		offlineErr := UserIMSendOfflineMessage(requestMessage, s)
+		if offlineErr != nil {
+			fmt.Println("发送离线消息失败：", offlineErr.Error())
+		}
+
 	}
 
 	//读取消息
@@ -266,9 +275,11 @@ func (s *ServerConn) Read() {
 
 		//发送消息socket
 		isSend := false
-		ToConn := s.epollM.GetUserConn(requestMessage.ProjectId, requestMessage.ProjectUid)
+		ToConn := s.epollM.GetUserConn(requestMessage.ToProjectId, requestMessage.ToProjectUid)
 		if ToConn != nil {
-			ToConn.Write([]byte(requestMessage.Data))
+			fmt.Println(s.userInfo.Name, " 给 ", ToConn.userInfo.Name, " 发送消息：", requestMessage.Data)
+			responseJson, _ := json.Marshal(requestMessage)
+			ToConn.Write([]byte(responseJson))
 			isSend = true
 		}
 		//存下消息
@@ -307,7 +318,7 @@ func (s *ServerConn) Close() {
 func StartEpoll() {
 	fmt.Println("epoll 服务启动")
 	epollM := NewEpollM()
-	epollIp := os.Getenv("EPOLL_Ip")
+	epollIp := os.Getenv("EPOLL_IP")
 	epollPort, _ := strconv.Atoi(os.Getenv("EPOLL_PORT"))
 	//开启监听
 	err := epollM.Listen(epollIp, epollPort)
@@ -330,6 +341,8 @@ func StartEpoll() {
 
 	//等待client的连接
 	err = epollM.Accept()
+	//todo 心跳检测
+
 	epollM.Close()
 	panic(err)
 }

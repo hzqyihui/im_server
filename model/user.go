@@ -3,6 +3,7 @@ package model
 import (
 	"IM_Server/cache"
 	"strconv"
+	"strings"
 )
 
 // User 用户模型
@@ -24,7 +25,7 @@ func GetUidByProjectInfo(projectUid int, projectId int) (int, error) {
 	hashKey := "user_project_relation"
 	relationField := strconv.Itoa(projectId) + "_" + strconv.Itoa(projectUid)
 
-	if res, err := cache.RedisClient.HGet(hashKey, relationField).Result(); err != nil {
+	if res, err := cache.RedisClient.HGet(hashKey, relationField).Result(); err == nil {
 		return strconv.Atoi(res)
 	} else {
 		//查询
@@ -37,4 +38,29 @@ func GetUidByProjectInfo(projectUid int, projectId int) (int, error) {
 		}
 	}
 	return 0, nil
+}
+
+func GetProjectByUidInfo(uid int) (int, int, error) {
+	hashKey := "user_project_uid_relation"
+	relationField := strconv.Itoa(uid)
+	projectId := 0
+	projectUid := 0
+
+	if res, err := cache.RedisClient.HGet(hashKey, relationField).Result(); err == nil {
+		strArray := strings.Split(res, "_")
+		projectId, _ = strconv.Atoi(strArray[0])
+		projectUid, _ = strconv.Atoi(strArray[1])
+		return projectId, projectUid, nil
+	} else {
+		//查询
+		userInfo := User{}
+		DB.Where(map[string]interface{}{"uid": uid}).Find(&userInfo)
+		if userInfo.ID > 0 {
+			relationValue := strconv.Itoa(userInfo.ProjectId) + "_" + strconv.Itoa(userInfo.ProjectUid)
+			cache.RedisClient.HSet(hashKey, relationField, relationValue)
+			//cache.RedisClient.Expire(hash_key,60*time.Second) 设置过期时间
+			return userInfo.ProjectId, userInfo.ProjectUid, nil
+		}
+	}
+	return 0, 0, nil
 }

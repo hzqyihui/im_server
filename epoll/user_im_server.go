@@ -3,6 +3,7 @@ package epoll_server
 import (
 	"IM_Server/Util"
 	"IM_Server/model"
+	"encoding/json"
 	"errors"
 	"fmt"
 )
@@ -28,11 +29,11 @@ func UserIMOnline(request IMMessage) model.User {
 	return userInfo
 }
 
+//保存消息记录
 func UserIMSaveMessage(request IMMessage, isSend bool) error {
 
-	tx := model.DB.Begin()
 	sendUid, _ := model.GetUidByProjectInfo(request.ProjectUid, request.ProjectId)
-	sendToUid, _ := model.GetUidByProjectInfo(request.ProjectUid, request.ProjectId)
+	sendToUid, _ := model.GetUidByProjectInfo(request.ToProjectUid, request.ToProjectId)
 
 	messageModel := model.Message{
 		Uid:         sendUid,
@@ -45,9 +46,40 @@ func UserIMSaveMessage(request IMMessage, isSend bool) error {
 	}
 
 	fmt.Println("插入消息数据：", messageModel)
-	if err := tx.Create(&messageModel).Error; err != nil {
+	if err := model.DB.Create(&messageModel).Error; err != nil {
 		return errors.New("UserIMSaveMessageError")
 	}
-	tx.Commit()
+
+	return nil
+}
+
+//发送离线消息
+func UserIMSendOfflineMessage(request IMMessage, s *ServerConn) error {
+
+	curUid, _ := model.GetUidByProjectInfo(request.ProjectUid, request.ProjectId)
+
+	offLineDbMessage := []model.Message{}
+	model.DB.Where(map[string]interface{}{"to_uid": curUid, "is_send": 0}).Find(&offLineDbMessage)
+
+	for _, v := range offLineDbMessage {
+		sendProjectId, sendProjectUid, _ := model.GetProjectByUidInfo(v.Uid)
+		imMessage := IMMessage{
+			ProjectId:    sendProjectId,
+			ProjectUid:   sendProjectUid,
+			Time:         v.Time,
+			Data:         v.Message,
+			Type:         1,
+			ToProjectId:  request.ToProjectId,
+			ToProjectUid: request.ToProjectUid,
+		}
+		//发送离线消息
+		responseJson, _ := json.Marshal(imMessage)
+		s.Write([]byte(responseJson))
+		//更新状态
+		v.IsSend = 1
+		if err := model.DB.Save(&v).Error; err != nil {
+			return err
+		}
+	}
 	return nil
 }
