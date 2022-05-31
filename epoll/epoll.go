@@ -204,15 +204,15 @@ type ServerConn struct {
 //2 回执消息  （tudo 后期加个uuid来标识唯一消息）
 //1 消息
 type IMMessage struct {
-	ProjectId  int
-	ProjectUid int
+	ProjectId  int `json:"ProjectId,omitempty"`
+	ProjectUid int `json:"project_uid,omitempty"`
 	// Uid int  //为0是服务器发送的
-	Time         int    //时间戳
-	Data         string //数据
-	Type         int    //1普通消息2回执消息,表示已经收到 3心跳[ProjectId  ProjectUid]4.错误提示
-	ToProjectId  int
-	ToProjectUid int
-	GroupId      int
+	Time         int    `json:"time,omitempty"` //时间戳
+	Data         string `json:"data,omitempty"` //数据
+	Type         int    `json:"type,omitempty"` //1普通消息2回执消息,表示已经收到 3心跳[ProjectId  ProjectUid]4.错误提示
+	ToProjectId  int    `json:"to_project_id,omitempty"`
+	ToProjectUid int    `json:"to_project_uid,omitempty"`
+	GroupId      int    `json:"group_id,omitempty"`
 }
 
 func (s *ServerConn) PreHandleMessage(data []byte) (IMMessage, error) {

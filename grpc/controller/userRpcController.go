@@ -46,4 +46,13 @@ func (c *UserRpcController) UserDel(ctx context.Context, in *proto_service.User)
 	return response, nil
 }
 
-//查询类
+//查询方法
+func (c *UserRpcController) QueryUserList(ctx context.Context, in *proto_service.QueryCommonReq) (*proto_service.IMUsers, error) {
+	fmt.Println("收到一个 QueryUserList 请求，请求参数：", in)
+
+	imUsers := service.QueryUserList(in)
+
+	return &proto_service.IMUsers{
+		User: imUsers,
+	}, nil
+}

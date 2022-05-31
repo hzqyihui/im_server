@@ -726,7 +726,7 @@ func (x *HandleResponse) GetMsg() string {
 	return ""
 }
 
-type QueryCommonRes struct {
+type QueryCommonReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -736,8 +736,8 @@ type QueryCommonRes struct {
 	GroupId    int64 `protobuf:"varint,3,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
 }
 
-func (x *QueryCommonRes) Reset() {
-	*x = QueryCommonRes{}
+func (x *QueryCommonReq) Reset() {
+	*x = QueryCommonReq{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_im_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -745,13 +745,13 @@ func (x *QueryCommonRes) Reset() {
 	}
 }
 
-func (x *QueryCommonRes) String() string {
+func (x *QueryCommonReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryCommonRes) ProtoMessage() {}
+func (*QueryCommonReq) ProtoMessage() {}
 
-func (x *QueryCommonRes) ProtoReflect() protoreflect.Message {
+func (x *QueryCommonReq) ProtoReflect() protoreflect.Message {
 	mi := &file_im_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -763,46 +763,46 @@ func (x *QueryCommonRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryCommonRes.ProtoReflect.Descriptor instead.
-func (*QueryCommonRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use QueryCommonReq.ProtoReflect.Descriptor instead.
+func (*QueryCommonReq) Descriptor() ([]byte, []int) {
 	return file_im_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *QueryCommonRes) GetProjectId() int64 {
+func (x *QueryCommonReq) GetProjectId() int64 {
 	if x != nil {
 		return x.ProjectId
 	}
 	return 0
 }
 
-func (x *QueryCommonRes) GetProjectUid() int64 {
+func (x *QueryCommonReq) GetProjectUid() int64 {
 	if x != nil {
 		return x.ProjectUid
 	}
 	return 0
 }
 
-func (x *QueryCommonRes) GetGroupId() int64 {
+func (x *QueryCommonReq) GetGroupId() int64 {
 	if x != nil {
 		return x.GroupId
 	}
 	return 0
 }
 
-type QueryMessageRes struct {
+type QueryMessageReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	QueryCommonRes *QueryCommonRes `protobuf:"bytes,1,opt,name=query_common_res,json=queryCommonRes,proto3" json:"query_common_res,omitempty"`
+	QueryCommonRes *QueryCommonReq `protobuf:"bytes,1,opt,name=query_common_res,json=queryCommonRes,proto3" json:"query_common_res,omitempty"`
 	ToProjectId    int64           `protobuf:"varint,4,opt,name=to_project_id,json=toProjectId,proto3" json:"to_project_id,omitempty"`
 	ToProjectUid   int64           `protobuf:"varint,5,opt,name=to_project_uid,json=toProjectUid,proto3" json:"to_project_uid,omitempty"`
 	StartTime      int64           `protobuf:"varint,6,opt,name=start_time,json=startTime,proto3" json:"start_time,omitempty"`
 	EndTime        int64           `protobuf:"varint,7,opt,name=end_time,json=endTime,proto3" json:"end_time,omitempty"`
 }
 
-func (x *QueryMessageRes) Reset() {
-	*x = QueryMessageRes{}
+func (x *QueryMessageReq) Reset() {
+	*x = QueryMessageReq{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_im_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -810,13 +810,13 @@ func (x *QueryMessageRes) Reset() {
 	}
 }
 
-func (x *QueryMessageRes) String() string {
+func (x *QueryMessageReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*QueryMessageRes) ProtoMessage() {}
+func (*QueryMessageReq) ProtoMessage() {}
 
-func (x *QueryMessageRes) ProtoReflect() protoreflect.Message {
+func (x *QueryMessageReq) ProtoReflect() protoreflect.Message {
 	mi := &file_im_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -828,40 +828,40 @@ func (x *QueryMessageRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use QueryMessageRes.ProtoReflect.Descriptor instead.
-func (*QueryMessageRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use QueryMessageReq.ProtoReflect.Descriptor instead.
+func (*QueryMessageReq) Descriptor() ([]byte, []int) {
 	return file_im_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *QueryMessageRes) GetQueryCommonRes() *QueryCommonRes {
+func (x *QueryMessageReq) GetQueryCommonRes() *QueryCommonReq {
 	if x != nil {
 		return x.QueryCommonRes
 	}
 	return nil
 }
 
-func (x *QueryMessageRes) GetToProjectId() int64 {
+func (x *QueryMessageReq) GetToProjectId() int64 {
 	if x != nil {
 		return x.ToProjectId
 	}
 	return 0
 }
 
-func (x *QueryMessageRes) GetToProjectUid() int64 {
+func (x *QueryMessageReq) GetToProjectUid() int64 {
 	if x != nil {
 		return x.ToProjectUid
 	}
 	return 0
 }
 
-func (x *QueryMessageRes) GetStartTime() int64 {
+func (x *QueryMessageReq) GetStartTime() int64 {
 	if x != nil {
 		return x.StartTime
 	}
 	return 0
 }
 
-func (x *QueryMessageRes) GetEndTime() int64 {
+func (x *QueryMessageReq) GetEndTime() int64 {
 	if x != nil {
 		return x.EndTime
 	}
@@ -945,18 +945,18 @@ var file_im_proto_rawDesc = []byte{
 	0x64, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x6f,
 	0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x02, 0x6f, 0x6b, 0x12, 0x10, 0x0a, 0x03, 0x6d,
 	0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x6b, 0x0a,
-	0x0e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x12,
+	0x0e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x12,
 	0x1d, 0x0a, 0x0a, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x03, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x64, 0x12, 0x1f,
 	0x0a, 0x0b, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x75, 0x69, 0x64, 0x18, 0x02, 0x20,
 	0x01, 0x28, 0x03, 0x52, 0x0a, 0x70, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x55, 0x69, 0x64, 0x12,
 	0x19, 0x0a, 0x08, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x5f, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28,
 	0x03, 0x52, 0x07, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x49, 0x64, 0x22, 0xde, 0x01, 0x0a, 0x0f, 0x51,
-	0x75, 0x65, 0x72, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x12, 0x47,
+	0x75, 0x65, 0x72, 0x79, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x12, 0x47,
 	0x0a, 0x10, 0x71, 0x75, 0x65, 0x72, 0x79, 0x5f, 0x63, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x5f, 0x72,
 	0x65, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f,
-	0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x52, 0x0e, 0x71, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f,
+	0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x52, 0x0e, 0x71, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f,
 	0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x12, 0x22, 0x0a, 0x0d, 0x74, 0x6f, 0x5f, 0x70, 0x72,
 	0x6f, 0x6a, 0x65, 0x63, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0b,
 	0x74, 0x6f, 0x50, 0x72, 0x6f, 0x6a, 0x65, 0x63, 0x74, 0x49, 0x64, 0x12, 0x24, 0x0a, 0x0e, 0x74,
@@ -998,17 +998,17 @@ var file_im_proto_rawDesc = []byte{
 	0x61, 0x6e, 0x64, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12,
 	0x48, 0x0a, 0x0d, 0x51, 0x75, 0x65, 0x72, 0x79, 0x55, 0x73, 0x65, 0x72, 0x4c, 0x69, 0x73, 0x74,
 	0x12, 0x1d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x1a,
+	0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x1a,
 	0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e,
 	0x49, 0x4d, 0x55, 0x73, 0x65, 0x72, 0x73, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x0e, 0x51, 0x75, 0x65,
 	0x72, 0x79, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x1d, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x51, 0x75, 0x65, 0x72,
-	0x79, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f,
+	0x79, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x49, 0x4d, 0x47, 0x72, 0x6f,
 	0x75, 0x70, 0x73, 0x22, 0x00, 0x12, 0x4f, 0x0a, 0x10, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4d, 0x65,
 	0x73, 0x73, 0x61, 0x67, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x51, 0x75, 0x65, 0x72, 0x79, 0x4d,
-	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x1a, 0x19, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x49, 0x4d, 0x4d, 0x65, 0x73, 0x73,
 	0x61, 0x67, 0x65, 0x73, 0x22, 0x00, 0x42, 0x11, 0x5a, 0x0f, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x5f, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
@@ -1039,15 +1039,15 @@ var file_im_proto_goTypes = []interface{}{
 	(*Group)(nil),           // 7: proto_service.Group
 	(*UserGroup)(nil),       // 8: proto_service.UserGroup
 	(*HandleResponse)(nil),  // 9: proto_service.HandleResponse
-	(*QueryCommonRes)(nil),  // 10: proto_service.QueryCommonRes
-	(*QueryMessageRes)(nil), // 11: proto_service.QueryMessageRes
+	(*QueryCommonReq)(nil),  // 10: proto_service.QueryCommonReq
+	(*QueryMessageReq)(nil), // 11: proto_service.QueryMessageReq
 }
 var file_im_proto_depIdxs = []int32{
 	1,  // 0: proto_service.IMMessages.message:type_name -> proto_service.IMMessage
 	3,  // 1: proto_service.IMGroups.group:type_name -> proto_service.IMGroup
 	5,  // 2: proto_service.IMUsers.user:type_name -> proto_service.IMUser
 	6,  // 3: proto_service.UserGroup.project_users:type_name -> proto_service.User
-	10, // 4: proto_service.QueryMessageRes.query_common_res:type_name -> proto_service.QueryCommonRes
+	10, // 4: proto_service.QueryMessageReq.query_common_res:type_name -> proto_service.QueryCommonReq
 	6,  // 5: proto_service.IMRpc.UserAdd:input_type -> proto_service.User
 	6,  // 6: proto_service.IMRpc.UserEdit:input_type -> proto_service.User
 	6,  // 7: proto_service.IMRpc.UserDel:input_type -> proto_service.User
@@ -1055,9 +1055,9 @@ var file_im_proto_depIdxs = []int32{
 	7,  // 9: proto_service.IMRpc.GroupEdit:input_type -> proto_service.Group
 	7,  // 10: proto_service.IMRpc.GroupDel:input_type -> proto_service.Group
 	8,  // 11: proto_service.IMRpc.UserGroupEdit:input_type -> proto_service.UserGroup
-	10, // 12: proto_service.IMRpc.QueryUserList:input_type -> proto_service.QueryCommonRes
-	10, // 13: proto_service.IMRpc.QueryGroupList:input_type -> proto_service.QueryCommonRes
-	11, // 14: proto_service.IMRpc.QueryMessageList:input_type -> proto_service.QueryMessageRes
+	10, // 12: proto_service.IMRpc.QueryUserList:input_type -> proto_service.QueryCommonReq
+	10, // 13: proto_service.IMRpc.QueryGroupList:input_type -> proto_service.QueryCommonReq
+	11, // 14: proto_service.IMRpc.QueryMessageList:input_type -> proto_service.QueryMessageReq
 	9,  // 15: proto_service.IMRpc.UserAdd:output_type -> proto_service.HandleResponse
 	9,  // 16: proto_service.IMRpc.UserEdit:output_type -> proto_service.HandleResponse
 	9,  // 17: proto_service.IMRpc.UserDel:output_type -> proto_service.HandleResponse
@@ -1202,7 +1202,7 @@ func file_im_proto_init() {
 			}
 		}
 		file_im_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*QueryCommonRes); i {
+			switch v := v.(*QueryCommonReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1214,7 +1214,7 @@ func file_im_proto_init() {
 			}
 		}
 		file_im_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*QueryMessageRes); i {
+			switch v := v.(*QueryMessageReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1274,11 +1274,11 @@ type IMRpcClient interface {
 	//修改组员
 	UserGroupEdit(ctx context.Context, in *UserGroup, opts ...grpc.CallOption) (*HandleResponse, error)
 	//查询用户列表
-	QueryUserList(ctx context.Context, in *QueryCommonRes, opts ...grpc.CallOption) (*IMUsers, error)
+	QueryUserList(ctx context.Context, in *QueryCommonReq, opts ...grpc.CallOption) (*IMUsers, error)
 	//查询聊天群列表
-	QueryGroupList(ctx context.Context, in *QueryCommonRes, opts ...grpc.CallOption) (*IMGroups, error)
+	QueryGroupList(ctx context.Context, in *QueryCommonReq, opts ...grpc.CallOption) (*IMGroups, error)
 	//查询聊天记录
-	QueryMessageList(ctx context.Context, in *QueryMessageRes, opts ...grpc.CallOption) (*IMMessages, error)
+	QueryMessageList(ctx context.Context, in *QueryMessageReq, opts ...grpc.CallOption) (*IMMessages, error)
 }
 
 type iMRpcClient struct {
@@ -1352,7 +1352,7 @@ func (c *iMRpcClient) UserGroupEdit(ctx context.Context, in *UserGroup, opts ...
 	return out, nil
 }
 
-func (c *iMRpcClient) QueryUserList(ctx context.Context, in *QueryCommonRes, opts ...grpc.CallOption) (*IMUsers, error) {
+func (c *iMRpcClient) QueryUserList(ctx context.Context, in *QueryCommonReq, opts ...grpc.CallOption) (*IMUsers, error) {
 	out := new(IMUsers)
 	err := c.cc.Invoke(ctx, "/proto_service.IMRpc/QueryUserList", in, out, opts...)
 	if err != nil {
@@ -1361,7 +1361,7 @@ func (c *iMRpcClient) QueryUserList(ctx context.Context, in *QueryCommonRes, opt
 	return out, nil
 }
 
-func (c *iMRpcClient) QueryGroupList(ctx context.Context, in *QueryCommonRes, opts ...grpc.CallOption) (*IMGroups, error) {
+func (c *iMRpcClient) QueryGroupList(ctx context.Context, in *QueryCommonReq, opts ...grpc.CallOption) (*IMGroups, error) {
 	out := new(IMGroups)
 	err := c.cc.Invoke(ctx, "/proto_service.IMRpc/QueryGroupList", in, out, opts...)
 	if err != nil {
@@ -1370,7 +1370,7 @@ func (c *iMRpcClient) QueryGroupList(ctx context.Context, in *QueryCommonRes, op
 	return out, nil
 }
 
-func (c *iMRpcClient) QueryMessageList(ctx context.Context, in *QueryMessageRes, opts ...grpc.CallOption) (*IMMessages, error) {
+func (c *iMRpcClient) QueryMessageList(ctx context.Context, in *QueryMessageReq, opts ...grpc.CallOption) (*IMMessages, error) {
 	out := new(IMMessages)
 	err := c.cc.Invoke(ctx, "/proto_service.IMRpc/QueryMessageList", in, out, opts...)
 	if err != nil {
@@ -1397,11 +1397,11 @@ type IMRpcServer interface {
 	//修改组员
 	UserGroupEdit(context.Context, *UserGroup) (*HandleResponse, error)
 	//查询用户列表
-	QueryUserList(context.Context, *QueryCommonRes) (*IMUsers, error)
+	QueryUserList(context.Context, *QueryCommonReq) (*IMUsers, error)
 	//查询聊天群列表
-	QueryGroupList(context.Context, *QueryCommonRes) (*IMGroups, error)
+	QueryGroupList(context.Context, *QueryCommonReq) (*IMGroups, error)
 	//查询聊天记录
-	QueryMessageList(context.Context, *QueryMessageRes) (*IMMessages, error)
+	QueryMessageList(context.Context, *QueryMessageReq) (*IMMessages, error)
 }
 
 // UnimplementedIMRpcServer can be embedded to have forward compatible implementations.
@@ -1429,13 +1429,13 @@ func (*UnimplementedIMRpcServer) GroupDel(context.Context, *Group) (*HandleRespo
 func (*UnimplementedIMRpcServer) UserGroupEdit(context.Context, *UserGroup) (*HandleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserGroupEdit not implemented")
 }
-func (*UnimplementedIMRpcServer) QueryUserList(context.Context, *QueryCommonRes) (*IMUsers, error) {
+func (*UnimplementedIMRpcServer) QueryUserList(context.Context, *QueryCommonReq) (*IMUsers, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryUserList not implemented")
 }
-func (*UnimplementedIMRpcServer) QueryGroupList(context.Context, *QueryCommonRes) (*IMGroups, error) {
+func (*UnimplementedIMRpcServer) QueryGroupList(context.Context, *QueryCommonReq) (*IMGroups, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryGroupList not implemented")
 }
-func (*UnimplementedIMRpcServer) QueryMessageList(context.Context, *QueryMessageRes) (*IMMessages, error) {
+func (*UnimplementedIMRpcServer) QueryMessageList(context.Context, *QueryMessageReq) (*IMMessages, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryMessageList not implemented")
 }
 
@@ -1570,7 +1570,7 @@ func _IMRpc_UserGroupEdit_Handler(srv interface{}, ctx context.Context, dec func
 }
 
 func _IMRpc_QueryUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryCommonRes)
+	in := new(QueryCommonReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1582,13 +1582,13 @@ func _IMRpc_QueryUserList_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/proto_service.IMRpc/QueryUserList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IMRpcServer).QueryUserList(ctx, req.(*QueryCommonRes))
+		return srv.(IMRpcServer).QueryUserList(ctx, req.(*QueryCommonReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _IMRpc_QueryGroupList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryCommonRes)
+	in := new(QueryCommonReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1600,13 +1600,13 @@ func _IMRpc_QueryGroupList_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/proto_service.IMRpc/QueryGroupList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IMRpcServer).QueryGroupList(ctx, req.(*QueryCommonRes))
+		return srv.(IMRpcServer).QueryGroupList(ctx, req.(*QueryCommonReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _IMRpc_QueryMessageList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryMessageRes)
+	in := new(QueryMessageReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1618,7 +1618,7 @@ func _IMRpc_QueryMessageList_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/proto_service.IMRpc/QueryMessageList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IMRpcServer).QueryMessageList(ctx, req.(*QueryMessageRes))
+		return srv.(IMRpcServer).QueryMessageList(ctx, req.(*QueryMessageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

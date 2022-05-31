@@ -35,13 +35,13 @@ service IMRpc{
     //-------------------------------查询-------------------------------
 
     //查询用户列表
-    rpc QueryUserList(QueryCommonRes)  returns (IMUsers){}
+    rpc QueryUserList(QueryCommonReq)  returns (IMUsers){}
 
     //查询聊天群列表
-    rpc QueryGroupList(QueryCommonRes)  returns (IMGroups){}
+    rpc QueryGroupList(QueryCommonReq)  returns (IMGroups){}
 
     //查询聊天记录
-    rpc QueryMessageList(QueryMessageRes)  returns (IMMessages){}
+    rpc QueryMessageList(QueryMessageReq)  returns (IMMessages){}
 
 
 }
@@ -128,14 +128,14 @@ message HandleResponse{
 }
 
 
-message QueryCommonRes{
+message QueryCommonReq{
     int64 project_id = 1;
     int64 project_uid = 2; //这个可以不填，留着之后加权限，留日志吧
     int64 group_id = 3;
 }
 
-message QueryMessageRes{
-    QueryCommonRes query_common_res = 1;
+message QueryMessageReq{
+    QueryCommonReq query_common_res = 1;
 
     int64 to_project_id = 4;
     int64 to_project_uid = 5;

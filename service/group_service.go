@@ -1,6 +1,7 @@
 package service
 
 import (
+	"IM_Server/Util"
 	"IM_Server/grpc/proto_service"
 	"IM_Server/model"
 	"errors"
@@ -55,5 +56,31 @@ func GroupDel(r *proto_service.Group) error {
 
 	tx.Commit()
 	return nil
+
+}
+
+//查询这个人有那些组
+func QueryGroupList(req *proto_service.QueryCommonReq) []*proto_service.IMGroup {
+
+	tx := model.DB.Begin()
+	uid, _ := model.GetUidByProjectInfo(int(req.ProjectUid), int(req.ProjectId))
+	groupUserList := []model.UserGroup{}
+	tx.Where(model.UserGroup{Uid: uid}).Find(&groupUserList)
+	groupIds, _ := Util.ArrayColumn(groupUserList, "Group")
+
+	groupList := []model.Group{}
+	tx.Where("id in (?)", groupIds).Find(&groupList)
+
+	IMGroups := []*proto_service.IMGroup{}
+	for _, v := range groupList {
+		IMGroups = append(IMGroups, &proto_service.IMGroup{
+			Id:     int64(v.ID),
+			Name:   v.Name,
+			Avatar: v.Avatar,
+			Des:    v.Des,
+		})
+	}
+	tx.Commit()
+	return IMGroups
 
 }

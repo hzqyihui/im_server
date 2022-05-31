@@ -1,6 +1,7 @@
 package service
 
 import (
+	"IM_Server/Util"
 	"IM_Server/grpc/proto_service"
 	"IM_Server/model"
 	"errors"
@@ -56,5 +57,38 @@ func UserDel(userRpc *proto_service.User) error {
 	}
 	tx.Commit()
 	return nil
+
+}
+
+func QueryUserList(req *proto_service.QueryCommonReq) []*proto_service.IMUser {
+
+	tx := model.DB.Begin()
+	userList := []model.User{}
+	if req.GroupId == 0 {
+		tx.Where(model.User{ProjectId: int(req.ProjectId), ProjectUid: int(req.ProjectUid)}).Find(&userList)
+
+	} else {
+		//todo 尝试下left join
+		groupUserList := []model.UserGroup{}
+		tx.Where(model.UserGroup{GroupId: int(req.GroupId)}).Find(&groupUserList)
+		userIds, _ := Util.ArrayColumn(groupUserList, "Uid")
+		tx.Where(map[string]interface{}{"project_id": req.ProjectId}).Where("id in (?)", userIds).Find(&userList)
+
+	}
+	IMUsers := []*proto_service.IMUser{}
+	for _, v := range userList {
+		IMUsers = append(IMUsers, &proto_service.IMUser{
+			Id:             int64(v.ID),
+			ProjectId:      int64(v.ProjectId),
+			ProjectUid:     int64(v.ProjectUid),
+			Name:           v.Name,
+			IsOnline:       int64(v.IsOnline),
+			Avatar:         v.Avatar,
+			Pwd:            v.Pwd,
+			LastOnlineTime: int64(v.LastOnlineTime),
+		})
+	}
+	tx.Commit()
+	return IMUsers
 
 }

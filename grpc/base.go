@@ -20,7 +20,9 @@ func StartRpc() {
 	s := grpc.NewServer()
 
 	// 服务注册
-	proto_service.RegisterUserRpcServer(s, &rpc_controller.UserRpcController{})
+	proto_service.RegisterIMRpcServer(s, &rpc_controller.UserRpcController{})
+	proto_service.RegisterIMRpcServer(s, &rpc_controller.GroupRpcController{})
+	proto_service.RegisterIMRpcServer(s, &rpc_controller.UserGroupRpcController{})
 
 	log.Println("gRPC listen on " + rpcAddress)
 
