@@ -1,0 +1,129 @@
+package rpc_controller
+
+import (
+	"IM_Server/grpc/proto_service"
+	"IM_Server/service"
+	"fmt"
+	"golang.org/x/net/context"
+)
+
+type ImRpcController struct {
+	proto_service.IMRpcServer
+}
+
+func (c *ImRpcController) UserAdd(ctx context.Context, in *proto_service.User) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 UserAdd 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.UserEdit(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+
+func (c *ImRpcController) UserEdit(ctx context.Context, in *proto_service.User) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 UserEdit 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.UserEdit(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+func (c *ImRpcController) UserDel(ctx context.Context, in *proto_service.User) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 UserDel 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.UserDel(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+
+//查询方法
+func (c *ImRpcController) QueryUserList(ctx context.Context, in *proto_service.QueryCommonReq) (*proto_service.IMUsers, error) {
+	fmt.Println("收到一个 QueryUserList 请求，请求参数：", in)
+
+	imUsers := service.QueryUserList(in)
+
+	return &proto_service.IMUsers{
+		User: imUsers,
+	}, nil
+}
+
+//组
+
+func (c *ImRpcController) GroupAdd(ctx context.Context, in *proto_service.Group) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 GroupAdd 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.GroupEdit(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+
+func (c *ImRpcController) GroupEdit(ctx context.Context, in *proto_service.Group) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 GroupEdit 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.GroupEdit(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+
+func (c *ImRpcController) GroupDel(ctx context.Context, in *proto_service.Group) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 GroupDel 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.GroupDel(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+
+//查询方法
+func (c *ImRpcController) QueryGroupList(ctx context.Context, in *proto_service.QueryCommonReq) (*proto_service.IMGroups, error) {
+	fmt.Println("收到一个 QueryGroupList 请求，请求参数：", in)
+
+	imGroups := service.QueryGroupList(in)
+
+	return &proto_service.IMGroups{
+		Group: imGroups,
+	}, nil
+}
+
+func (c *ImRpcController) UserGroupEdit(ctx context.Context, in *proto_service.UserGroup) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 UserGroupEdit 请求，请求参数：", in)
+
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.UserGroupEdit(in); err != nil {
+		response.Ok = false
+		response.Msg = err.Error()
+	}
+
+	return response, nil
+}
+
+func (c *ImRpcController) QueryMessageList(ctx context.Context, in *proto_service.QueryMessageReq) (*proto_service.IMMessages, error) {
+	fmt.Println("收到一个 QueryMessageList 请求，请求参数：", in)
+
+	imMessages := service.QueryMessageList(in)
+
+	return &proto_service.IMMessages{
+		Message: imMessages,
+	}, nil
+}

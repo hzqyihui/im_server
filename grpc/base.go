@@ -20,9 +20,11 @@ func StartRpc() {
 	s := grpc.NewServer()
 
 	// 服务注册
-	proto_service.RegisterIMRpcServer(s, &rpc_controller.UserRpcController{})
-	proto_service.RegisterIMRpcServer(s, &rpc_controller.GroupRpcController{})
-	proto_service.RegisterIMRpcServer(s, &rpc_controller.UserGroupRpcController{})
+	proto_service.RegisterIMRpcServer(s, &rpc_controller.ImRpcController{})
+	//这里服务注册重复了
+	//proto_service.RegisterIMRpcServer(s, &rpc_controller.GroupRpcController{})
+	//proto_service.RegisterIMRpcServer(s, &rpc_controller.UserGroupRpcController{})
+	//proto_service.RegisterIMRpcServer(s, &rpc_controller.MessageRpcController{})
 
 	log.Println("gRPC listen on " + rpcAddress)
 
