@@ -11,12 +11,12 @@ func GroupEdit(r *proto_service.Group) error {
 
 	tx := model.DB.Begin()
 	groupModel := model.Group{
-		Name:      r.Name,
-		Avatar:    *r.Avatar,
-		CreateUid: int(r.Uid),
-		Des:       r.Des,
+		Name:   r.Name,
+		Avatar: r.Avatar,
+		//CreateUid: int(r.Uid),todo
+		Des: r.Des,
 		BaseModel: model.BaseModel{
-			ID: uint(*r.GroupId),
+			ID: uint(r.GroupId),
 		},
 	}
 
@@ -39,6 +39,18 @@ func GroupEdit(r *proto_service.Group) error {
 		if err := tx.Create(&groupModel).Error; err != nil {
 			return errors.New("GroupEdit新增失败")
 		}
+	}
+
+	tx.Commit()
+	return nil
+
+}
+
+func GroupDel(r *proto_service.Group) error {
+
+	tx := model.DB.Begin()
+	if err := tx.Where(map[string]interface{}{"id": r.GroupId}).Delete(model.Group{}); err != nil {
+		return errors.New("GroupDel失败")
 	}
 
 	tx.Commit()

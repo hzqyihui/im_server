@@ -12,9 +12,9 @@ func UserEdit(userRpc *proto_service.User) error {
 	tx := model.DB.Begin()
 	userModel := model.User{
 		Name:       userRpc.Name,
-		Avatar:     *userRpc.Avatar,
+		Avatar:     userRpc.Avatar,
 		ProjectId:  int(userRpc.ProjectId),
-		ProjectUid: int(userRpc.Uid),
+		ProjectUid: int(userRpc.ProjectUid),
 	}
 	fmt.Println(userModel)
 	dbUser := &model.User{}
@@ -34,6 +34,25 @@ func UserEdit(userRpc *proto_service.User) error {
 		if err := tx.Create(&userModel).Error; err != nil {
 			return errors.New("注册失败")
 		}
+	}
+	tx.Commit()
+	return nil
+
+}
+
+func UserDel(userRpc *proto_service.User) error {
+
+	tx := model.DB.Begin()
+	userModel := model.User{
+		ProjectId:  int(userRpc.ProjectId),
+		ProjectUid: int(userRpc.ProjectUid),
+	}
+	dbUser := &model.User{}
+	dbUserCount := 0
+	tx.Where(model.User{ProjectId: userModel.ProjectId, ProjectUid: userModel.ProjectUid}).Find(dbUser).Count(&dbUserCount)
+	if dbUserCount > 0 {
+		//删除
+		tx.Delete(dbUser)
 	}
 	tx.Commit()
 	return nil

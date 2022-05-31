@@ -8,13 +8,13 @@ import (
 )
 
 type UserRpcController struct {
-	proto_service.UserRpcServer
+	proto_service.IMRpcServer
 }
 
-func (c *UserRpcController) UserAdd(ctx context.Context, in *proto_service.User) (*proto_service.Response, error) {
+func (c *UserRpcController) UserAdd(ctx context.Context, in *proto_service.User) (*proto_service.HandleResponse, error) {
 	fmt.Println("收到一个 UserAdd 请求，请求参数：", in)
 
-	response := &proto_service.Response{Ok: true, Msg: ""}
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
 	if err := service.UserEdit(in); err != nil {
 		response.Ok = false
 		response.Msg = err.Error()
@@ -23,10 +23,10 @@ func (c *UserRpcController) UserAdd(ctx context.Context, in *proto_service.User)
 	return response, nil
 }
 
-func (c *UserRpcController) UserEdit(ctx context.Context, in *proto_service.User) (*proto_service.Response, error) {
+func (c *UserRpcController) UserEdit(ctx context.Context, in *proto_service.User) (*proto_service.HandleResponse, error) {
 	fmt.Println("收到一个 UserEdit 请求，请求参数：", in)
 
-	response := &proto_service.Response{Ok: true, Msg: ""}
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
 	if err := service.UserEdit(in); err != nil {
 		response.Ok = false
 		response.Msg = err.Error()
@@ -34,12 +34,11 @@ func (c *UserRpcController) UserEdit(ctx context.Context, in *proto_service.User
 
 	return response, nil
 }
+func (c *UserRpcController) UserDel(ctx context.Context, in *proto_service.User) (*proto_service.HandleResponse, error) {
+	fmt.Println("收到一个 UserDel 请求，请求参数：", in)
 
-func (c *UserRpcController) GroupAdd(ctx context.Context, in *proto_service.Group) (*proto_service.Response, error) {
-	fmt.Println("收到一个 GroupAdd 请求，请求参数：", in)
-
-	response := &proto_service.Response{Ok: true, Msg: ""}
-	if err := service.GroupEdit(in); err != nil {
+	response := &proto_service.HandleResponse{Ok: true, Msg: ""}
+	if err := service.UserDel(in); err != nil {
 		response.Ok = false
 		response.Msg = err.Error()
 	}
@@ -47,38 +46,4 @@ func (c *UserRpcController) GroupAdd(ctx context.Context, in *proto_service.Grou
 	return response, nil
 }
 
-func (c *UserRpcController) GroupEdit(ctx context.Context, in *proto_service.Group) (*proto_service.Response, error) {
-	fmt.Println("收到一个 GroupEdit 请求，请求参数：", in)
-
-	response := &proto_service.Response{Ok: true, Msg: ""}
-	if err := service.GroupEdit(in); err != nil {
-		response.Ok = false
-		response.Msg = err.Error()
-	}
-
-	return response, nil
-}
-
-func (c *UserRpcController) UserGroupAdd(ctx context.Context, in *proto_service.UserGroup) (*proto_service.Response, error) {
-	fmt.Println("收到一个 UserGroupAdd 请求，请求参数：", in)
-
-	response := &proto_service.Response{Ok: true, Msg: ""}
-	if err := service.UserGroupEdit(in); err != nil {
-		response.Ok = false
-		response.Msg = err.Error()
-	}
-
-	return response, nil
-}
-
-func (c *UserRpcController) UserGroupEdit(ctx context.Context, in *proto_service.UserGroup) (*proto_service.Response, error) {
-	fmt.Println("收到一个 UserGroupEdit 请求，请求参数：", in)
-
-	response := &proto_service.Response{Ok: true, Msg: ""}
-	if err := service.UserGroupEdit(in); err != nil {
-		response.Ok = false
-		response.Msg = err.Error()
-	}
-
-	return response, nil
-}
+//查询类
