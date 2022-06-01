@@ -62,12 +62,12 @@ message IMMessages{
 }
 message IMMessage{
     int64 id = 1;
-    int64 Uid = 2;
-    int64 GroupId = 3;
-    int64 ToUid = 4;
-    int64 MessageType = 5;
-    int64 Time = 6;
-    string Message = 7;
+    int64 uid = 2;
+    int64 group_id = 3;
+    int64 to_uid = 4;
+    int64 message_type = 5;
+    int64 time = 6;
+    string message = 7;
 }
 
 message IMGroups{
@@ -75,9 +75,9 @@ message IMGroups{
 }
 message IMGroup{
     int64 id = 1;
-    string Name = 2;
-    string Avatar = 3;
-    string Des = 4;
+    string name = 2;
+    string avatar = 3;
+    string des = 4;
 }
 
 
@@ -86,13 +86,13 @@ message IMUsers{
 }
 message IMUser{
     int64 id = 1;
-    int64 ProjectId = 2;
-    int64 ProjectUid = 3;
-    string Name = 4;
+    int64 project_id = 2;
+    int64 project_uid = 3;
+    string name = 4;
     int64 IsOnline = 5;
-    string Avatar = 6;
-    string Pwd = 7;
-    int64 LastOnlineTime = 8;
+    string avatar = 6;
+    string pwd = 7;
+    int64 last_online_time = 8;
 }
 
 
