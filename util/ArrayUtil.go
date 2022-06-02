@@ -26,31 +26,34 @@ func InArray(val interface{}, array interface{}) (exists bool, index int) {
 	return
 }
 
-func ArrayColumn(array interface{}, key string) (result map[string]interface{}, err error) {
-	result = make(map[string]interface{})
+func ArrayColumn(array interface{}, key string) (result []interface{}, err error) {
+	result = []interface{}{}
 	t := reflect.TypeOf(array)
 	v := reflect.ValueOf(array)
 	if t.Kind() != reflect.Slice {
 		return nil, errors.New("array type not slice")
 	}
-	if v.Len() == 0 {
-		return nil, errors.New("array len is zero")
-	}
+	//if v.Len() == 0 {
+	//	return nil, errors.New("array len is zero")
+	//}
 
 	for i := 0; i < v.Len(); i++ {
+
 		indexv := v.Index(i)
+		if v.Index(i).Type().Kind() == reflect.Ptr {
+			indexv = v.Index(i).Elem()
+		}
+
+		fmt.Println(indexv, indexv.Type().Kind())
 		if indexv.Type().Kind() != reflect.Struct {
 			return nil, errors.New("element type not struct")
 		}
 		mapKeyInterface := indexv.FieldByName(key)
+
 		if mapKeyInterface.Kind() == reflect.Invalid {
 			return nil, errors.New("key not exist")
 		}
-		mapKeyString, err := interfaceToString(mapKeyInterface.Interface())
-		if err != nil {
-			return nil, err
-		}
-		result[mapKeyString] = indexv.Interface()
+		result = append(result, mapKeyInterface)
 	}
 	return result, err
 }
