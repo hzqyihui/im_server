@@ -1,9 +1,9 @@
 package service
 
 import (
-	"IM_Server/Util"
 	"IM_Server/grpc/proto_service"
 	"IM_Server/model"
+	"IM_Server/util"
 	"errors"
 )
 

@@ -1,8 +1,8 @@
 package epoll_server
 
 import (
-	"IM_Server/Util"
 	"IM_Server/model"
+	"IM_Server/util"
 	"encoding/json"
 	"errors"
 	"fmt"
