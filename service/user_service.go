@@ -71,7 +71,7 @@ func QueryUserList(req *proto_service.QueryCommonReq) []*proto_service.IMUser {
 		//todo 尝试下left join
 		groupUserList := []model.UserGroup{}
 		tx.Where(model.UserGroup{GroupId: int(req.GroupId)}).Find(&groupUserList)
-		userIds, _ := Util.ArrayColumn(groupUserList, "Uid")
+		userIds, _ := util.ArrayColumn(groupUserList, "Uid")
 		tx.Where(map[string]interface{}{"project_id": req.ProjectId}).Where("id in (?)", userIds).Find(&userList)
 
 	}

@@ -42,7 +42,7 @@ func UserIMSaveMessage(request IMMessage, isSend bool) error {
 		Message:     request.Data,
 		MessageType: request.Type,
 		Time:        request.Time,
-		IsSend:      Util.BoolToInt(isSend),
+		IsSend:      util.BoolToInt(isSend),
 	}
 
 	fmt.Println("插入消息数据：", messageModel)

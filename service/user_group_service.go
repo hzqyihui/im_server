@@ -31,7 +31,7 @@ func UserGroupEdit(r *proto_service.UserGroup) error {
 	//删除
 	tx.Where(map[string]interface{}{"group_id": r.GroupId}).Delete(model.UserGroup{})
 	//新增
-	dbUids, _ := Util.ArrayColumn(r.ProjectUsers, "ProjectUid")
+	dbUids, _ := util.ArrayColumn(r.ProjectUsers, "ProjectUid")
 	addIMUsers := []model.User{}
 	tx.Where(map[string]interface{}{"project_id": r.ProjectId}).Where("project_uid in (?)", dbUids).Find(&addIMUsers)
 
