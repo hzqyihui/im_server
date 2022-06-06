@@ -44,7 +44,6 @@ func ArrayColumn(array interface{}, key string) (result []interface{}, err error
 			indexv = v.Index(i).Elem()
 		}
 
-		fmt.Println(indexv, indexv.Type().Kind())
 		if indexv.Type().Kind() != reflect.Struct {
 			return nil, errors.New("element type not struct")
 		}
@@ -53,8 +52,15 @@ func ArrayColumn(array interface{}, key string) (result []interface{}, err error
 		if mapKeyInterface.Kind() == reflect.Invalid {
 			return nil, errors.New("key not exist")
 		}
-		result = append(result, mapKeyInterface)
+
+		mapKeyString, mapKeyStringErr := interfaceToString(mapKeyInterface.Interface())
+		if mapKeyStringErr != nil {
+			return nil, mapKeyStringErr
+		}
+
+		result = append(result, mapKeyString)
 	}
+	fmt.Println("ArrayColumn:", result)
 	return result, err
 }
 

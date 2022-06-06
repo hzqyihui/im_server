@@ -5,7 +5,6 @@ import (
 	"IM_Server/model"
 	"IM_Server/util"
 	"errors"
-	"fmt"
 )
 
 func UserGroupEdit(r *proto_service.UserGroup) error {
@@ -29,27 +28,34 @@ func UserGroupEdit(r *proto_service.UserGroup) error {
 
 	//删除
 	tx.Where(map[string]interface{}{"group_id": r.GroupId}).Delete(model.UserGroup{})
-	//新增
+	//使用in 必须使用[]string 的格式，[]int应该也可以，不能是[]interface
 	dbUids, _ := util.ArrayColumn(r.ProjectUsers, "ProjectUid")
 
 	addIMUsers := []model.User{}
 	tx.Where(map[string]interface{}{"project_id": r.ProjectId}).Where("project_uid in (?)", dbUids).Find(&addIMUsers)
-
-	//todo 这里查询不出来
 	//把这些人新增
-	addUserGroup := []model.UserGroup{}
+	//addUserGroup := []*model.UserGroup{}
 	for _, v := range addIMUsers {
-		addUserGroup = append(addUserGroup, model.UserGroup{
+
+		//addUserGroup = append(addUserGroup, &model.UserGroup{
+		//	Uid:     int(v.ID),
+		//	GroupId: int(r.GroupId),
+		//})
+
+		if err := tx.Create(&model.UserGroup{
 			Uid:     int(v.ID),
 			GroupId: int(r.GroupId),
-		})
-	}
-	fmt.Println(111, addUserGroup)
-	if len(addUserGroup) > 0 {
-		if err := tx.Create(&addUserGroup).Error; err != nil {
+		}).Error; err != nil {
 			return errors.New("UserGroupEdit")
 		}
 	}
+	//todo 使用批量创建新数据
+	//fmt.Println(111, addUserGroup)
+	//if len(addUserGroup) > 0 {
+	//	if err := tx.Create(&addUserGroup).Error; err != nil {
+	//		return errors.New("UserGroupEdit")
+	//	}
+	//}
 
 	tx.Commit()
 	return nil

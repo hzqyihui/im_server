@@ -101,5 +101,5 @@ func handleResponse(err error) (*proto_service.HandleResponse, error) {
 		response.Msg = err.Error()
 		return response, err
 	}
-	return nil, nil
+	return response, nil
 }

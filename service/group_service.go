@@ -66,10 +66,12 @@ func QueryGroupList(req *proto_service.QueryCommonReq) []*proto_service.IMGroup 
 	uid, _ := model.GetUidByProjectInfo(int(req.ProjectUid), int(req.ProjectId))
 	groupUserList := []model.UserGroup{}
 	tx.Where(model.UserGroup{Uid: uid}).Find(&groupUserList)
-	groupIds, _ := util.ArrayColumn(groupUserList, "Group")
+	groupIds, _ := util.ArrayColumn(groupUserList, "GroupId")
 
 	groupList := []model.Group{}
-	tx.Where("id in (?)", groupIds).Find(&groupList)
+	tx.Where("id in (?)", groupIds).
+		Or(map[string]interface{}{"create_uid": int(req.ProjectUid)}).
+		Find(&groupList)
 
 	IMGroups := []*proto_service.IMGroup{}
 	for _, v := range groupList {
